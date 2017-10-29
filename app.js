@@ -16,11 +16,11 @@ function initError() {
 
 function capture(payload) {
 	score.textContent = payload.score;
-  if (!isLoading && payload.hasMotion) {
-    isLoading = true;
-    analyzeImage();
-    console.log('test');
-  }
+  // if (!isLoading && payload.hasMotion) {
+  //   isLoading = true;
+  //   analyzeImage();
+  //   console.log('test');
+  // }
 }
 
 DiffCamEngine.init({
@@ -49,27 +49,56 @@ function getBlob() {
 }
 
 function analyzeImage() {
-  console.log('analyze');
-  var blob = getBlob();
-  var url = 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description,Faces&language=en';
-  var apiKey = 'c8a88151c9c84934aef42a17c161eb5f';
-  $.ajax({
-    url: url,
-    type: 'POST',
-    beforeSend: function(xhrObj){
-        xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
-        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
-    },
-    data: blob,
-    processData: false,
-    error: function(data) {
-      console.log(data);
-    },
-    success: function(data) {
-      isLoading = false;
-      console.log(data);
-    }
-  });
+  // var blob = getBlob();
+  // // var url = 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description,Faces&language=en';
+	var url = 'https://alphaca.azurewebsites.net/api/HttpTriggerJS1?code=5LrKggzCpNWo9Lhf6gAaEpfetACN9dZtpZwDssockYzhi5VGWSKM1Q==';
+  // var apiKey = 'c8a88151c9c84934aef42a17c161eb5f';
+  // $.ajax({
+  //   url: url,
+  //   type: 'POST',
+  //   beforeSend: function(xhrObj){
+  //       xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+  //       xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+  //   },
+  //   // data: blob,
+	// 	data: {
+	// 		name: 'hello'
+	// 	},
+  //   processData: false,
+  //   error: function(data) {
+  //     console.log(data);
+  //   },
+  //   success: function(data) {
+  //     isLoading = false;
+  //     console.log(data);
+  //   }
+  // });
+	var blob = getBlob();
+	var formData = new FormData();
+	formData.append('source', blob);
+	console.log(formData);
+	console.log(blob);
+	$.ajax({
+		url: url,
+		type: 'POST',
+		headers: {
+			// 'Content-Type': "application/json",
+			'Content-Type': "application/octet-stream",
+		},
+		processData: false,
+		data: blob,
+		// data: JSON.stringify({
+		// 	blob: blob,
+		// 	name: 'test',
+		// 	name1: 'test2'
+		// }),
+		success: function(data) {
+			console.log(data);
+		},
+		error: function(err) {
+			console.log(err);
+		}
+	})
 }
 
 $(function() {
