@@ -1,4 +1,4 @@
-* Usage
+# Usage
 ```shell
 $ python -m SimpleHTTPServer
 ```
