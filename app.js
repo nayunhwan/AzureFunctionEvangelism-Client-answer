@@ -8,6 +8,11 @@ var isLoading = false;
 
 function initSuccess() {
 	DiffCamEngine.start();
+	if (localStorage.getItem('_id') === null) {
+		var d = new Date();
+		localStorage.setItem('_id', SHA256(d.toString()));
+	}
+	console.log(localStorage.getItem('_id'));
 }
 
 function initError() {
@@ -47,13 +52,11 @@ function analyzeImage() {
 	var url = 'https://alphaca.azurewebsites.net/api/HttpTriggerJS1?code=5LrKggzCpNWo9Lhf6gAaEpfetACN9dZtpZwDssockYzhi5VGWSKM1Q==';
 	var blob = getBlob();
 	var formData = new FormData();
-	formData.append('source', blob);
-	console.log(formData);
-	console.log(blob);
 	$.ajax({
 		url: url,
 		type: 'POST',
 		headers: {
+			'_id': localStorage.getItem('_id'),
 			'Content-Type': "application/octet-stream",
 		},
 		processData: false,
