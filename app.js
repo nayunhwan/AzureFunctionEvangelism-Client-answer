@@ -6,29 +6,25 @@ var _canvas;
 
 var isLoading = false;
 
-function initSuccess() {
-	DiffCamEngine.start();
-	if (localStorage.getItem('_id') === null) {
-		var d = new Date();
-		localStorage.setItem('_id', SHA256(d.toString()));
-	}
-	console.log(localStorage.getItem('_id'));
-}
+$(function() {
+	$('button').click(function(){
+    analyzeImage();
+  });
 
-function initError() {
-	alert('Something went wrong.');
-}
+	setInterval(function() {
+		console.log('capture');
+		analyzeImage();
+	}, 10*1000);
 
-function capture(payload) {
-	score.textContent = payload.score;
-}
-
-DiffCamEngine.init({
-	video: video,
-	motionCanvas: canvas,
-	initSuccessCallback: initSuccess,
-	initErrorCallback: initError,
-	captureCallback: capture
+	navigator.getUserMedia({ video: {width: 640,	height: 480} },
+		function(localMediaStream) {
+			video.srcObject = localMediaStream;
+			console.log('test');
+		},
+		function(err) {
+			console.log(err);
+		}
+	);
 });
 
 function dataURLtoBlob(dataurl) {
@@ -67,11 +63,5 @@ function analyzeImage() {
 		error: function(err) {
 			console.log(err);
 		}
-	})
+	});
 }
-
-$(function() {
-  $('button').click(function(){
-    analyzeImage()
-  });
-});
