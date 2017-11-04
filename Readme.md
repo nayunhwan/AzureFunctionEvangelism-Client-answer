@@ -1,10 +1,10 @@
 # Usage
+서버는 `python`을 이용하여 간단하게 실행시킬 수 있습니다.
 
 ```shell
 $ python -m SimpleHTTPServer
 ```
-
-When server is running, go to the `localhost:8000` in the web browser
+서버가 실행된 이후에는 `localhost:8000`으로 접속하여 확인할 수 있습니다.
 
 ## \#1 html에 video태그를 추가합니다.
 `video`라는 `id`값을 가진 `<video/>` 태그를 생성해줍니다. 이때 꼭 `autoplay` 옵션을 활성화 시켜줘야 합니다.
@@ -17,3 +17,5 @@ When server is running, go to the `localhost:8000` in the web browser
   <figcaption>Live Video</figcaption>
 </figure>
 ```
+
+## \#2 
