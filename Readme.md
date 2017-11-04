@@ -18,4 +18,4 @@ $ python -m SimpleHTTPServer
 </figure>
 ```
 
-## \#2 
+## \#2 `_id` 토큰을 생성
