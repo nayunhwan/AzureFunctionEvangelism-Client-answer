@@ -216,8 +216,6 @@ module.exports = function (context, req) {
                 });
             });
         }).then(data => {
-            context.log('test2');
-            context.log(data);
             context.res = data;
             context.done();
         });
