@@ -25,3 +25,7 @@ video, canvas {
 canvas {
 	image-rendering: pixelated;
 }
+
+ul {
+	list-style: none;
+}
