@@ -6,7 +6,7 @@ $ python -m SimpleHTTPServer
 ```
 서버가 실행된 이후에는 `localhost:8000`으로 접속하여 확인할 수 있습니다.
 
-## \#1 html에 video태그를 추가합니다.
+## \#1 html에 video태그를 추가
 `video`라는 `id`값을 가진 `<video/>` 태그를 생성해줍니다. 이때 꼭 `autoplay` 옵션을 활성화 시켜줘야 합니다.
 
 ```html
@@ -38,4 +38,24 @@ if (localStorage.getItem('_id') === null) {
 }
 // localStorage에 제대로 저장이 되었는지 확인하기 위하여 console을 이용하여 확인합니다.
 console.log(localStorage.getItem('_id'));
+```
+
+
+## \#3 웹캠 스트림을 웹브라우저 상에 표시
+`navigator.getUserMedia(constraints, successCallback, errCallback)` 메소드를 이용하여
+video 스트림을 받아와 `<video/>` 태그에 표시합니다.
+
+```js
+// app.js
+
+// navigator.getUserMedia에서 video를 받아오도록 설정한 뒤에
+navigator.getUserMedia({ video: true },
+  function(localMediaStream) {
+    //successCallback function에서 video태그의 srcObject를 localMediaStream으로 설정해줍니다.
+    video.srcObject = localMediaStream;
+  },
+  function(err) {
+    console.log(err);
+  }
+);
 ```
