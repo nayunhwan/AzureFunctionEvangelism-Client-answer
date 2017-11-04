@@ -122,3 +122,112 @@ switch (data.result.emotion) {
 // Description
 $('.description').text(data.result.description);
 ```
+
+
+## \#5 Azure-function 완성하기
+```js
+const request = require('request');
+const qs = require('querystring');
+const xml2js = require('xml2js');
+
+module.exports = function (context, req) {
+    context.log('JavaScript HTTP trigger function processed a request.');
+    context.log(req.body);
+    context.log(req.headers._id);
+
+    if (req.body) {
+        const _promise = new Promise((resolve, reject) => {
+            request.post({
+                url: 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize',
+                headers: {
+                    'Ocp-Apim-Subscription-Key': 'b8543fad17e8441d8ae5004d0359f3a5',
+                    'Content-Type': 'application/octet-stream',
+                },
+                body: req.body,
+            }, (err, result, body) => {
+                if (err) reject(err);
+                resolve(JSON.parse(body));
+            });
+        }).then(emotionData => {
+            return new Promise((resolve, reject) => {
+                request.post({
+                    url: 'https://api.projectoxford.ai/vision/v1.0/analyze?visualFeatures=Description,Faces&language=en',
+                    headers: {
+                        'Ocp-Apim-Subscription-Key': 'c8a88151c9c84934aef42a17c161eb5f',
+                        'Content-Type': 'application/octet-stream',
+                    },
+                    body: req.body,
+                }, (err, result, body) => {
+                    if (err) reject(err);
+                    resolve({
+                        emotion: emotionData,
+                        face: JSON.parse(body)
+                    });
+                });
+            });
+        }).then(visionData => {
+            const engDescription = visionData.face.description.captions[0].text;
+            return new Promise((resolve, reject) => {
+                request.get({
+                    url: `https://api.microsofttranslator.com/v2/http.svc/Translate?text=${qs.escape(engDescription)}&from=en&to=ko`,
+                    headers: {
+                        'Ocp-Apim-Subscription-Key': '131784c1d38c4a0ca28dc5e59c42d088',
+                    }
+                }, (err, result, body) => {
+                    if (err) reject(err);
+                    resolve(
+                        Object.assign(visionData, {
+                            korXml: body
+                        })
+                    );
+                });
+            });        
+        }).then(data => {
+            return new Promise((resolve, reject) => {
+                xml2js.parseString(data.korXml, (err, res) => {
+                    if (err) reject(err);
+                    resolve(
+                        Object.assign(data, {
+                            korDescription: res.string._
+                        })
+                    );
+                });
+            });
+        }).then(allData => {
+            allData.face_id = req.headers._id;
+            allData.nickname = req.headers.nickname;
+            return new Promise((resolve, reject) => {
+                request.post({
+                    url: 'https://dlsrb.azurewebsites.net/api/HttpTriggerJS1?code=IemuaEy6uWyTIcBJg9/341Sqvs3aHXcRy0SFnDrzOdECNsUyOSGaAA==',
+                    // url: 'https://alphaca.azurewebsites.net/api/HttpTriggerJS2?code=w5QJRosRRKgKoTTL6XCswS6XfOcvDS3HuJaA2DHKkTqogyC4TUXJAQ==',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(allData),
+                }, (err, result, body) => {
+                    if (err) {
+                        context.log('err');
+                        context.log(err);
+                        reject(err);
+                    }
+                    context.log('test');
+                    context.log(body);
+                    resolve(JSON.parse(body));
+                });
+            });
+        }).then(data => {
+            context.log('test2');
+            context.log(data);
+            context.res = data;
+            context.done();
+        });
+    }
+    else {
+        context.res = {
+            status: 400,
+            body: "Please pass a name on the query string or in the request body"
+        };
+        context.done();
+    }
+};
+```
