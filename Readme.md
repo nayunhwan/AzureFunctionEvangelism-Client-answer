@@ -26,6 +26,7 @@ $ python -m SimpleHTTPServer
 `hash`는 `최초 접속 시간`을 기준으로하여 만들며, 만들어진 토큰은 `localStorage`에 저장합니다.
 `localStorage`에 이미 저장된 토큰이 있다면 만들어진 토큰을 가져옵니다.
 
+#### app.js
 ```js
 // app.js
 
@@ -45,6 +46,7 @@ console.log(localStorage.getItem('_id'));
 `navigator.getUserMedia(constraints, successCallback, errCallback)` 메소드를 이용하여
 video 스트림을 받아와 `<video/>` 태그에 표시합니다.
 
+#### app.js
 ```js
 // app.js
 
