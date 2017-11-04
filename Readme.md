@@ -29,10 +29,11 @@ $ python -m SimpleHTTPServer
 ```js
 // localStorage에 '_id'라는 토큰이 없는 경우
 if (localStorage.getItem('_id') === null) {
-    // 새로운 날짜 객체를 생성한뒤
+    // 새로운 날짜 객체를 생성한 후
     var d = new Date();
     // SHA256 알고리즘을 이용하여 토큰을 생성하고 localStorage에 저장합니다.
     localStorage.setItem('_id', SHA256(d.toString()));
 }
+// localStorage에 제대로 저장이 되었는지 확인하기 위하여 console을 이용하여 확인합니다.
 console.log(localStorage.getItem('_id'));
 ```
