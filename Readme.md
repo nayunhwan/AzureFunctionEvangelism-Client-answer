@@ -27,6 +27,8 @@ $ python -m SimpleHTTPServer
 `localStorage`에 이미 저장된 토큰이 있다면 만들어진 토큰을 가져옵니다.
 
 ```js
+// app.js
+
 // localStorage에 '_id'라는 토큰이 없는 경우
 if (localStorage.getItem('_id') === null) {
     // 새로운 날짜 객체를 생성한 후
