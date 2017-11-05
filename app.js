@@ -36,27 +36,64 @@ function getBlob() {
   #3-3
     processData: false
   #3-4
-    data: blob (using getBlob function);
+    data: blob (using getBlob);
 */
 
 function analyzeImage() {
-  var url  = 'YOUR-AZURE-FUNCTION-URL'
+	var url = 'https://alphaca.azurewebsites.net/api/HttpTriggerJS1?code=5LrKggzCpNWo9Lhf6gAaEpfetACN9dZtpZwDssockYzhi5VGWSKM1Q==';
 	var blob = getBlob();
 	$.ajax({
 		url: url,
 		type: 'POST',
 		headers: {
-			// '_id': unique id token (in localStorage),
-      // 'nickname': the value of #inputNickname,
-			// 'Content-Type': "application/octet-stream",
+			'_id': localStorage.getItem('_id'),
+      'nickname': $('#inputNickname').val(),
+			'Content-Type': "application/octet-stream",
 		},
 		processData: false,
 		data: blob,
 		success: function(data) {
 			console.log(data);
-      /*
-        #4 success function 완성하기
-      */
+      // Age
+      $('.age').text(data.result.age);
+
+      // Gender
+      if (data.result.gender === "Male") $('.gender').text("👱🏻");
+      else if (data.result.gender === "Female") $('.gender').text("👩🏻");
+
+      // emotion
+      // 😡😬🤢😨😀😐😭😱
+      switch (data.result.emotion) {
+        case 'anger':
+          $('.emoji').text("😡");
+          break;
+        case 'contempt':
+          $('.emoji').text("😬");
+          break;
+        case 'disgust':
+          $('.emoji').text("🤢");
+          break;
+        case 'fear':
+          $('.emoji').text("😨");
+          break;
+        case 'happiness':
+          $('.emoji').text("😀");
+          break;
+        case 'neutral':
+          $('.emoji').text("😐");
+          break;
+        case 'sadness':
+          $('.emoji').text("😭");
+          break;
+        case 'surprise':
+          $('.emoji').text("😱");
+          break;
+        default:
+          $('.emoji').text("😐");
+      }
+
+      // Description
+      $('.description').text(data.result.description);
 		},
 		error: function(err) {
 			console.log(err);
